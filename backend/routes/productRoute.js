@@ -2,6 +2,7 @@ const express = require("express");
 const Product = require("../models/productModel");
 
 const router = express.Router();
+
 // Get all products
 router.get('/', async (req, res) => {
     try {
@@ -21,6 +22,7 @@ router.get('/:id', async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
+
 // Create a new product
 router.post("/", async (req, res) => {
   try {
@@ -31,6 +33,7 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 // Update a product
 router.put("/:id", async (req, res) => {
   try {
@@ -42,6 +45,21 @@ router.put("/:id", async (req, res) => {
     }
     await product.update({ name, price, description });
     res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Delete a product
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findOne({ where: { id } });
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    await product.destroy();
+    res.json({ message: "Product deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
