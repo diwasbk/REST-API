@@ -31,5 +31,20 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// Update a product
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, price, description } = req.body;
+    const product = await Product.findOne({ where: { id } });
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    await product.update({ name, price, description });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router
