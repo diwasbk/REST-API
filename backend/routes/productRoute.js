@@ -21,5 +21,15 @@ router.get('/:id', async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
-  
+// Create a new product
+router.post("/", async (req, res) => {
+  try {
+    const { name, price, description } = req.body;
+    const newProduct = await Product.create({ name, price, description });
+    res.status(201).json(newProduct);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router
